@@ -7,7 +7,9 @@ class Snappy
     @device   = Snappy.get_device_by_name(options[:d])
     @device ||= QTCaptureDevice.defaultInputDeviceWithMediaType(QTMediaTypeVideo)
     @wait = options[:w].to_i
-    @filename = options[:filename] || 'snapshot.jpg'
+    @timestamp = Time.now.to_i
+    @pictures_directory = options[:pictures_directory] || "pictures"
+    @filename = options[:filename] || "snapshot-#{@timestamp}.jpg"
     self
   end
 
@@ -27,7 +29,9 @@ class Snappy
       end
       close_camera
       image = frame_to_image (@captured_frame)
-      save_image (image, @filename)
+      path = "#{@pictures_directory}/#{@filename}"
+      save_image (image, path)
+      puts "created new picture: #{@filename}"
     end
   end
 
